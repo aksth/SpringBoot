@@ -1,0 +1,28 @@
+version: '3'
+services:
+  docker-mysql:
+    restart: always
+    container_name: docker-mysql
+    image: mysql
+    environment:
+      MYSQL_DATABASE: book_manager
+      MYSQL_ROOT_PASSWORD: root
+    ports:
+      - "6033:3306"
+    networks:
+      - spring-boot-mysql-network
+  book-manager-app:
+    build:
+      context: ./
+      dockerfile: Dockerfile
+    expose:
+      - "10222"
+    ports:
+      - "10222:10222"
+    depends_on:
+      - "docker-mysql"
+    networks:
+      - spring-boot-mysql-network
+networks:
+  spring-boot-mysql-network:
+    driver: bridge
